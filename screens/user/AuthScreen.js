@@ -48,6 +48,12 @@ const AuthScreen = (props) => {
 
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }])
+    }
+  }, [error])
+
   const authHandler = async () => {
     let action
     if (isSignup) {
@@ -65,10 +71,11 @@ const AuthScreen = (props) => {
     setIsLoading(true)
     try {
       await dispatch(action)
+      props.navigation.navigate('Shop')
     } catch (err) {
       setError(err.message)
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -82,13 +89,6 @@ const AuthScreen = (props) => {
     },
     formIsValid: false,
   })
-
-  useEffect(() => {
-    if (error) {
-      console.log('response :', error)
-      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }])
-    }
-  }, [error])
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
